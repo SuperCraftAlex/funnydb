@@ -1,6 +1,6 @@
 package at.alex_s168.funnydb;
 
-import at.alex_s168.reverse.api.universal.network.RPacketBuffer;
+import at.alex_s168.buffer.SimpleBuffer;
 
 public class FDataElement {
 
@@ -42,11 +42,11 @@ public class FDataElement {
                 type = 2;
             }
         } else {
-            throw new RuntimeException("ReverseDataElement: No support for: "+value.getClass()+"!");
+            throw new RuntimeException("DataElement: No support for: "+value.getClass()+"!");
         }
     }
 
-    public FDataElement(RPacketBuffer buf, FDataRow row) {
+    public FDataElement(SimpleBuffer buf, FDataRow row) {
         type = buf.readVarInt();
         name = buf.readString(500);
         this.row = row;
@@ -57,7 +57,7 @@ public class FDataElement {
                 case 2 -> value = buf.readString(99999);
                 case 3 -> value = buf.readByteArray();
                 case 4 -> value = buf.readStringArray(buf.readableBytes());
-                default -> throw new RuntimeException("ReverseDataElement: No support for ? with <= "+buf.readableBytes()+" bytes!");
+                default -> throw new RuntimeException("DataElement: No support for ? with <= "+buf.readableBytes()+" bytes!");
             }
         } catch (Exception e){
             throw new RuntimeException(e);
@@ -104,7 +104,7 @@ public class FDataElement {
         return name;
     }
 
-    public void save(RPacketBuffer buf) {
+    public void save(SimpleBuffer buf) {
         buf.writeVarInt(type);
         buf.writeString(name);
         try {

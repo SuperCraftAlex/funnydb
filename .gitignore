@@ -52,7 +52,4 @@ atlassian-ide-plugin.xml
 # -----
 *.hprof
 
-# MCP
-# -----
-/jars
-/.vscode
+/run/*
