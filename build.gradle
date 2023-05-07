@@ -10,6 +10,10 @@ tasks.withType(JavaCompile) {
 
 apply plugin:'application'
 
+apply plugin: 'java'
+sourceCompatibility = 1.17
+targetCompatibility = 1.17
+
 group 'at.alex_s168'
 version '1.0'
 
