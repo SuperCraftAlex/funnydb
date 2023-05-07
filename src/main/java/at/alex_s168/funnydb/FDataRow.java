@@ -1,6 +1,7 @@
 package at.alex_s168.funnydb;
 
 import at.alex_s168.buffer.SimpleBuffer;
+import at.alex_s168.funnydb.exception.FFormatException;
 import at.alex_s168.funnydb.util.FDataElementList;
 
 import java.util.Optional;
@@ -24,7 +25,7 @@ public class FDataRow {
         this.table = table;
         int a = buf.readVarInt();
         for (int i = 0; i < a; i++) {
-            data.add(new FDataElement(buf, this));
+            data.add(new FDataElement(buf, this, i));
         }
     }
 
@@ -36,6 +37,10 @@ public class FDataRow {
     public FDataElement getByValue(Object value) {
         Optional<FDataElement> e = data.stream().filter((d)->d.get().equals(value)).findFirst();
         return e.orElseGet(() -> new FDataElement(this));
+    }
+
+    public FDataTable table() {
+        return this.table;
     }
 
     /**
@@ -50,8 +55,11 @@ public class FDataRow {
     /**
      * resets all values and sets them to this:
      */
-    public FDataRow set(Object... values) {
+    public FDataRow set(Object... values) throws FFormatException {
         data.clear();
+        if(values.length != table.format().length()) {
+            throw new FFormatException();
+        }
         int i = 0;
         for(Object v : values) {
             data.add(new FDataElement(this.table.format().get(i).name(), v, this));

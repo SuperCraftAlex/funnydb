@@ -51,4 +51,8 @@ public class FTableFormat {
         return this;
     }
 
+    public int length() {
+        return columns.size();
+    }
+
 }
