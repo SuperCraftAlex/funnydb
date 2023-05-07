@@ -1,6 +1,8 @@
 package at.alex_s168.funnydb;
 
 import at.alex_s168.buffer.SimpleBuffer;
+import at.alex_s168.funnydb.encryption.BypassEncryptionHandler;
+import at.alex_s168.funnydb.encryption.EncryptionHandler;
 import io.netty.buffer.Unpooled;
 
 import java.io.File;
@@ -16,10 +18,12 @@ public class FDataBase {
 
     private List<FDataTable> tables;
     private int version;
+    private EncryptionHandler encrypter;
 
     public FDataBase(String path) {
         this.path = path;
         tables = new ArrayList<>();
+        encrypter = new BypassEncryptionHandler();
     }
 
     public List<FDataTable> getTables() {
@@ -28,6 +32,11 @@ public class FDataBase {
 
     public String getPath() {
         return path;
+    }
+
+    public FDataBase setHandler(EncryptionHandler handler) {
+        this.encrypter = handler;
+        return this;
     }
 
     /**
@@ -54,7 +63,7 @@ public class FDataBase {
         return this;
     }
 
-    public void createIfEmpty() throws Exception {
+    public FDataBase createIfEmpty() throws Exception {
         Path p = new File(path).toPath();
         tables = new ArrayList<>();
         if(Files.exists(p)) {
@@ -67,11 +76,13 @@ public class FDataBase {
             version = FDBDEF.VERSION;
             save();
         }
+        return this;
     }
 
-    public void load() throws Exception {
+    public FDataBase load() throws Exception {
         tables = new ArrayList<>();
-        SimpleBuffer buf = new SimpleBuffer(Unpooled.wrappedBuffer(Files.readAllBytes(new File(path).toPath())));
+        byte[] bytes = encrypter.decrypt(Files.readAllBytes(new File(path).toPath()));
+        SimpleBuffer buf = new SimpleBuffer(Unpooled.wrappedBuffer(bytes));
         version = buf.readVarInt();
         int a = buf.readVarInt();
         for (int i = 0; i < a; i++) {
@@ -79,6 +90,7 @@ public class FDataBase {
         }
         System.out.println("Loaded db!");
         buf.clear();
+        return this;
     }
 
     public void save() throws Exception {
@@ -90,7 +102,7 @@ public class FDataBase {
         });
         byte[] bytes = new byte[buf.readableBytes()];
         buf.readBytes(bytes);
-        Files.write(new File(path).toPath(), bytes);
+        Files.write(new File(path).toPath(), encrypter.encrypt(bytes));
     }
 
     public int estimateSize() {
