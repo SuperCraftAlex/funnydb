@@ -3,15 +3,19 @@ package at.alex_s168.funnydb;
 import at.alex_s168.buffer.SimpleBuffer;
 import at.alex_s168.funnydb.format.Format;
 
-public record FColumnFormat(String name, int type) {
+public record FColumnFormat(String name, int type, int pos) {
 
     public void save(SimpleBuffer buf) {
         buf.writeString(name);
         buf.writeVarInt(type);
     }
 
-    public FColumnFormat(SimpleBuffer buf) {
-        this(buf.readString(32), buf.readVarInt());
+    public FColumnFormat(SimpleBuffer buf, int pos) {
+        this(buf.readString(32), buf.readVarInt(), pos);
+    }
+
+    public FColumnFormat(String name, Format format, int pos) {
+        this(name, format.getType(), pos);
     }
 
     /**
@@ -24,10 +28,6 @@ public record FColumnFormat(String name, int type) {
             }
         }
         return null;
-    }
-
-    public FColumnFormat(String name, Format format) {
-        this(name, format.getType());
     }
 
 }

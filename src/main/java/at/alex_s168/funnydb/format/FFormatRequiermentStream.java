@@ -1,6 +1,7 @@
 package at.alex_s168.funnydb.format;
 
 import at.alex_s168.funnydb.FColumnFormat;
+import at.alex_s168.funnydb.FDataElement;
 import at.alex_s168.funnydb.exception.FFormatException;
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class FFormatRequiermentStream {
      * Adds a column to the format
      */
     public FFormatRequiermentStream c(String name, Format format) {
-        this.columns.add(new FColumnFormat(name, format));
+        this.columns.add(new FColumnFormat(name, format, this.columns.size()));
         return this;
     }
 

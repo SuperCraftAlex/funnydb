@@ -5,7 +5,7 @@ import at.alex_s168.funnydb.exception.FFormatException;
 
 public class FDataElement {
 
-    private String name;
+    private int cat;
     private Object value;
 
     public int getType() {
@@ -15,22 +15,22 @@ public class FDataElement {
     private final int type;
     private final FDataRow row;
 
-    public FDataElement(String name, FDataRow row) {
+    public FDataElement(int cat, FDataRow row) {
         this.type=-1;
-        this.name = name;
+        this.cat = cat;
         this.value = null;
         this.row = row;
     }
 
     public FDataElement(FDataRow row) {
         this.type=-1;
-        this.name = null;
+        this.cat = -1;
         this.value = null;
         this.row = row;
     }
 
-    public FDataElement(String name, Object value, FDataRow row) {
-        this.name = name;
+    public FDataElement(int cat, Object value, FDataRow row) {
+        this.cat = cat;
         this.value = value;
         this.row = row;
         if(value instanceof Integer) {type = 0;}
@@ -49,7 +49,7 @@ public class FDataElement {
 
     public FDataElement(SimpleBuffer buf, FDataRow row, int pos) {
         type = row.table().format().get(pos).type();
-        name = row.table().format().get(pos).name();
+        cat = pos;
         this.row = row;
         try {
             switch (type) {
@@ -65,12 +65,8 @@ public class FDataElement {
         }
     }
 
-    public void setIndex(String index) {
-        this.name = index;
-    }
-
     public void delete() {
-        row.remove(name);
+        row.remove(cat);
     }
 
     public FDataRow row() {
@@ -98,11 +94,15 @@ public class FDataElement {
     }
 
     public boolean exists() {
-        return name!=null&&value!=null;
+        return cat !=-1&&value!=null;
     }
 
-    public String getName() {
-        return name;
+    public int getCategory() {
+        return cat;
+    }
+
+    public String getCategoryName() {
+        return row.table().format().get(cat).name();
     }
 
     public void save(SimpleBuffer buf) {

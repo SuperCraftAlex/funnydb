@@ -52,7 +52,7 @@ public class FDataTable {
         for(FDataRow r : rows) {
             size.addAndGet(2);
             r.getData().forEach((e)->{
-                size.addAndGet(2 * e.getName().length());
+                size.addAndGet(2 * e.getCategoryName().length());
                 size.addAndGet(FDBDEF.ELEMENT_VALUE_MAX);
             });
         }

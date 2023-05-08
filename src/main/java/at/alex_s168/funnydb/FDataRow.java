@@ -30,7 +30,12 @@ public class FDataRow {
     }
 
     public FDataElement get(String index) {
-        Optional<FDataElement> e = data.stream().filter((d)-> d.getName().equals(index)).findFirst();
+        Optional<FDataElement> e = data.stream().filter((d)-> d.getCategoryName().equals(index)).findFirst();
+        return e.orElseGet(() -> new FDataElement(table.format().get(index).pos(), this));
+    }
+
+    public FDataElement get(int index) {
+        Optional<FDataElement> e = data.stream().filter((d)-> d.getCategory()==index).findFirst();
         return e.orElseGet(() -> new FDataElement(index, this));
     }
 
@@ -46,9 +51,19 @@ public class FDataRow {
     /**
      * Sets a value / creates it
      */
-    public FDataRow set(String name, Object value) {
-        Optional<FDataElement> o = data.stream().filter((d)->d.getName().equals(name)).findFirst();
-        o.ifPresentOrElse(e -> e.set(value), ()->data.add(new FDataElement(name, value,this)));
+    @Deprecated
+    public FDataRow set(String cat, Object value) {
+        Optional<FDataElement> o = data.stream().filter((d)->d.getCategoryName().equals(cat)).findFirst();
+        o.ifPresentOrElse(e -> e.set(value), ()->data.add(new FDataElement(table.format().get(cat).pos(), value, this)));
+        return this;
+    }
+
+    /**
+     * Sets a value / creates it
+     */
+    public FDataRow set(int cat, Object value) {
+        Optional<FDataElement> o = data.stream().filter((d)->d.getCategory()==cat).findFirst();
+        o.ifPresentOrElse(e -> e.set(value), ()->data.add(new FDataElement(cat, value,this)));
         return this;
     }
 
@@ -62,13 +77,14 @@ public class FDataRow {
         }
         int i = 0;
         for(Object v : values) {
-            data.add(new FDataElement(this.table.format().get(i).name(), v, this));
+            data.add(new FDataElement(i, v, this));
             i++;
         }
         return this;
     }
 
     public int getRID() {
+        // todo: no indexOf
         return table.getRows().indexOf(this);
     }
 
@@ -76,8 +92,8 @@ public class FDataRow {
         table.remove(this);
     }
 
-    public void remove(String name) {
-        data.removeIf((e)->e.getName().equals(name));
+    public void remove(int pos) {
+        data.remove(pos);
     }
 
     public void save(SimpleBuffer buf) {

@@ -5,6 +5,7 @@ import at.alex_s168.funnydb.FColumnFormat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FTableFormat {
 
@@ -18,7 +19,7 @@ public class FTableFormat {
         columns = new ArrayList<>();
         int a = buf.readVarInt();
         for (int i = 0; i < a; i++) {
-            columns.add(new FColumnFormat(buf));
+            columns.add(new FColumnFormat(buf, i));
         }
     }
 
@@ -29,6 +30,14 @@ public class FTableFormat {
 
     public FColumnFormat get(int i) {
         return columns.get(i);
+    }
+
+    public FColumnFormat get(String i) {
+        return columns.stream().filter((e)-> Objects.equals(e.name(), i)).findFirst().get();
+    }
+
+    public int pos(FColumnFormat f) {
+        return columns.indexOf(f);
     }
 
     /**
@@ -47,7 +56,7 @@ public class FTableFormat {
      * Adds a column to the format
      */
     public FTableFormat c(String name, Format format) {
-        this.columns.add(new FColumnFormat(name, format));
+        this.columns.add(new FColumnFormat(name, format, this.columns.size()));
         return this;
     }
 

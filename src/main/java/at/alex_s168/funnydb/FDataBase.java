@@ -58,9 +58,8 @@ public class FDataBase {
         return tables.get(tables.size()-1);
     }
 
-    public FDataBase remove(FDataTable table) {
+    public void remove(FDataTable table) {
         tables.remove(table);
-        return this;
     }
 
     public FDataBase createIfEmpty() throws Exception {
