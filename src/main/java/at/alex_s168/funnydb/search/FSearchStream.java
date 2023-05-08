@@ -5,7 +5,6 @@ import at.alex_s168.funnydb.FDataTable;
 import at.alex_s168.funnydb.util.FDataElementList;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -129,7 +128,7 @@ public class FSearchStream {
         req.add(new FSearchRequirement() {
             @Override
             public boolean appliesElement(FDataElement r) {
-                return r.row().getRID() == row;
+                return r.row().getID() == row;
             }
 
             @Override

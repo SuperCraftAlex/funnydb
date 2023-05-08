@@ -14,15 +14,18 @@ public class FDataRow {
 
     private final FDataElementList data;
     private final FDataTable table;
+    private final int id;
 
-    public FDataRow(FDataElementList data, FDataTable table) {
+    public FDataRow(FDataElementList data, FDataTable table, int id) {
         this.data = data;
         this.table = table;
+        this.id = id;
     }
 
-    public FDataRow(SimpleBuffer buf, FDataTable table) {
+    public FDataRow(SimpleBuffer buf, FDataTable table, int id) {
         this.data = new FDataElementList();
         this.table = table;
+        this.id = id;
         int a = buf.readVarInt();
         for (int i = 0; i < a; i++) {
             data.add(new FDataElement(buf, this, i));
@@ -83,9 +86,8 @@ public class FDataRow {
         return this;
     }
 
-    public int getRID() {
-        // todo: no indexOf
-        return table.getRows().indexOf(this);
+    public int getID() {
+        return this.id;
     }
 
     public void remove() {

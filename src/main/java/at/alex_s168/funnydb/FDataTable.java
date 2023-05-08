@@ -34,7 +34,7 @@ public class FDataTable {
         this.rows = new ArrayList<>();
         int a = buf.readVarInt();
         for (int i = 0; i < a; i++) {
-            rows.add(new FDataRow(buf, this));
+            rows.add(new FDataRow(buf, this, i));
         }
     }
 
@@ -97,22 +97,6 @@ public class FDataTable {
     }
 
     /**
-     * Adds a row "row" at position "pos"
-     */
-    public FDataRow insert(FDataRow row, int pos) {
-        rows.add(pos, row);
-        return rows.get(rows.size()-1);
-    }
-
-    /**
-     * Adds a new row at position "pos"
-     */
-    public FDataRow insert(int pos) {
-        rows.add(pos, new FDataRow(new FDataElementList(), this));
-        return rows.get(rows.size()-1);
-    }
-
-    /**
      * Adds a row "row" at the end
      */
     public FDataRow append(FDataRow row) {
@@ -124,8 +108,9 @@ public class FDataTable {
      * Adds a new row at the end
      */
     public FDataRow append() {
-        rows.add(new FDataRow(new FDataElementList(), this));
-        return rows.get(rows.size()-1);
+        int rs = rows.size();
+        rows.add(new FDataRow(new FDataElementList(), this, rs));
+        return rows.get(rs);
     }
 
     public Info info() {
