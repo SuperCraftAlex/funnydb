@@ -18,6 +18,8 @@ public class FSearchStream {
         this.req = new ArrayList<>();
     }
 
+    // TODO: ACH DU HEILIGE SCHEIßE! WAS GEHT HIER AB??? WARUM 1000000 "new FSearchRequirement", also dont search all columns!!!
+
     /**
      * Adds a requirement (condition)
      */
@@ -39,6 +41,16 @@ public class FSearchStream {
      */
     public FSearchStream r(String comlumn, Object value) {
         req.add(new FSearchRequierment(this.table, (e)->e.getName().equals(comlumn)&&e.get().equals(value)));
+        return this;
+    }
+
+    /**
+     * Adds a requirement (column = column & value = value)
+     */
+    public FSearchStream r(String comlumn) {
+        req.add(new FSearchRequierment(this.table, (e)->
+            e.getName().equals(comlumn)
+        ));
         return this;
     }
 
