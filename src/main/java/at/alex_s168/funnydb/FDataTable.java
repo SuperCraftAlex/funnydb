@@ -23,14 +23,14 @@ public class FDataTable {
     public FDataTable(FDataBase db, String name) {
         this.db = db;
         this.name = name;
-        this.format = new FTableFormat();
+        this.format = new FTableFormat(this);
         this.rows = new ArrayList<>();
     }
 
     public FDataTable(SimpleBuffer buf, FDataBase db) {
         this.db = db;
         name = buf.readString(32);
-        this.format = new FTableFormat(buf);
+        this.format = new FTableFormat(buf, this);
         this.rows = new ArrayList<>();
         int a = buf.readVarInt();
         for (int i = 0; i < a; i++) {

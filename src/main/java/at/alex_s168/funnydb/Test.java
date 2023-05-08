@@ -18,7 +18,11 @@ public class Test {
                 .load();
 
         FDataTable users = db.get("users");
-        users.format().reset().c("username", Format.STRING).c("password",Format.STRING).c("created",Format.LONG);
+        users.format().require()
+                .c("username", Format.STRING)
+                .c("password", Format.STRING)
+                .c("created", Format.LONG)
+                .enforce();
 
         users.append().set("alex_s168", "AAAFFBB", 544482269331L);
 
