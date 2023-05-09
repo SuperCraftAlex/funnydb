@@ -17,12 +17,12 @@ public class Test {
                 .createIfEmpty()
                 .load();
 
-        FDataTable users = db.get("users");
+        FDataTable users = db.addOrGet("users");
         users.format().require()
                 .column("username", Format.STRING).next()
                 .column("password", Format.STRING).next()
                 .column("created", Format.LONG).next()
-                .require();
+                .enforce();
 
         users.append().set("alex_s168", "AAAFFBB", 544482269331L);
 

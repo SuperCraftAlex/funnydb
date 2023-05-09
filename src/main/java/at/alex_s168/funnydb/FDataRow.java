@@ -72,11 +72,12 @@ public class FDataRow {
 
     /**
      * resets all values and sets them to this:
+     * (Warning: does not check the exact format!)
      */
     public FDataRow set(Object... values) throws FFormatException {
         data.clear();
         if(values.length != table.format().length()) {
-            throw new FFormatException();
+            throw new FFormatException("Table format does not match input row!");
         }
         int i = 0;
         for(Object v : values) {

@@ -43,7 +43,7 @@ public class FDataElement {
                 type = 2;
             }
         } else {
-            throw new RuntimeException(new FFormatException());
+            throw new RuntimeException(new FFormatException("No support for provided Object with Format: "+value.getClass()+" (Array: "+value.getClass().isArray()+")"));
         }
     }
 
@@ -58,7 +58,7 @@ public class FDataElement {
                 case 2 -> value = buf.readString(99999);
                 case 3 -> value = buf.readByteArray();
                 case 4 -> value = buf.readStringArray(buf.readableBytes());
-                default -> throw new RuntimeException(new FFormatException());
+                default -> throw new RuntimeException(new FFormatException("No support for data type "+type+"! Check that the version of the provided Database matches the storage version."));
             }
         } catch (Exception e){
             throw new RuntimeException(e);
@@ -113,10 +113,10 @@ public class FDataElement {
                 case 2 -> buf.writeString((String) value);
                 case 3 -> buf.writeByteArray((byte[]) value);
                 case 4 -> buf.writeStringArray((String[]) value);
-                default -> throw new RuntimeException(new FFormatException());
+                default -> throw new RuntimeException(new FFormatException("No support for data type "+type+"!"));
             }
         } catch (Exception e){
-            throw new RuntimeException(new FFormatException());
+            throw new RuntimeException(new FFormatException("Provided data Type does not match Object datatype!"));
         }
     }
 

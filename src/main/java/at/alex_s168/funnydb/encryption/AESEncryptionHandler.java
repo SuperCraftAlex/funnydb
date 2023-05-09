@@ -1,5 +1,7 @@
 package at.alex_s168.funnydb.encryption;
 
+import at.alex_s168.funnydb.exception.FEncryptionException;
+
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -16,15 +18,23 @@ public class AESEncryptionHandler implements EncryptionHandler {
     }
 
     @Override
-    public byte[] encrypt(byte[] in) throws Exception {
-        cipher.init(Cipher.ENCRYPT_MODE, key);
-        return cipher.doFinal(in);
+    public byte[] encrypt(byte[] in) throws FEncryptionException {
+        try {
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            return cipher.doFinal(in);
+        } catch (Exception e) {
+            throw new FEncryptionException(e);
+        }
     }
 
     @Override
-    public byte[] decrypt(byte[] in) throws Exception {
-        cipher.init(Cipher.DECRYPT_MODE, key);
-        return cipher.doFinal(in);
+    public byte[] decrypt(byte[] in) throws FEncryptionException {
+        try {
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            return cipher.doFinal(in);
+        } catch (Exception e) {
+            throw new FEncryptionException(e);
+        }
     }
 
     /**

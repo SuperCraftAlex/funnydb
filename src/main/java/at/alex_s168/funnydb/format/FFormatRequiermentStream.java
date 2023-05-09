@@ -54,7 +54,7 @@ public class FFormatRequiermentStream {
      */
     public void require() throws FFormatException {
         if(!check()) {
-            throw new FFormatException();
+            throw new FFormatException("Required format is not provided by the Table!");
         }
     }
 

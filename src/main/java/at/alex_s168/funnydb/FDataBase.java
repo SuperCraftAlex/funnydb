@@ -3,9 +3,14 @@ package at.alex_s168.funnydb;
 import at.alex_s168.buffer.SimpleBuffer;
 import at.alex_s168.funnydb.encryption.BypassEncryptionHandler;
 import at.alex_s168.funnydb.encryption.EncryptionHandler;
+import at.alex_s168.funnydb.exception.FDataBaseSaveException;
+import at.alex_s168.funnydb.exception.FEncryptionException;
+import at.alex_s168.funnydb.exception.FInvalidDataBaseException;
+import at.alex_s168.funnydb.exception.FInvalidDataTableException;
 import io.netty.buffer.Unpooled;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -40,22 +45,34 @@ public class FDataBase {
     }
 
     /**
-     * Gets a Table in the database by name. If it does not exist, it creates a new one.
+     * Gets a Table in the database by name
      */
-    public FDataTable get(String name) {
+    public FDataTable get(String name) throws FInvalidDataTableException {
         for (FDataTable t : tables) {
             if(t.info().name().equals(name)) {
                 return t;
             }
         }
-        FDataTable t = new FDataTable(this, name);
-        tables.add(t);
-        return t;
+        throw new FInvalidDataTableException(name);
     }
 
+    /**
+     * Adds a Table into the database with a name
+     */
     public FDataTable add(String name) {
         tables.add(new FDataTable(this, name));
         return tables.get(tables.size()-1);
+    }
+
+    /**
+     * Adds a Table into the database with a name
+     */
+    public FDataTable addOrGet(String name) {
+        try {
+            return get(name);
+        } catch (FInvalidDataTableException e) {
+            return add(name);
+        }
     }
 
     public void remove(FDataTable table) {
@@ -78,9 +95,14 @@ public class FDataBase {
         return this;
     }
 
-    public FDataBase load() throws Exception {
+    public FDataBase load() throws FInvalidDataBaseException, FEncryptionException {
         tables = new ArrayList<>();
-        byte[] bytes = encrypter.decrypt(Files.readAllBytes(new File(path).toPath()));
+        byte[] bytes;
+        try {
+            bytes = encrypter.decrypt(Files.readAllBytes(new File(path).toPath()));
+        } catch (IOException e) {
+            throw new FInvalidDataBaseException(path);
+        }
         SimpleBuffer buf = new SimpleBuffer(Unpooled.wrappedBuffer(bytes));
         version = buf.readVarInt();
         int a = buf.readVarInt();
@@ -92,7 +114,7 @@ public class FDataBase {
         return this;
     }
 
-    public void save() throws Exception {
+    public void save() throws FEncryptionException, FDataBaseSaveException {
         SimpleBuffer buf = new SimpleBuffer(Unpooled.buffer(estimateSize()));
         buf.writeVarInt(version);
         buf.writeVarInt(tables.size());
@@ -101,7 +123,11 @@ public class FDataBase {
         });
         byte[] bytes = new byte[buf.readableBytes()];
         buf.readBytes(bytes);
-        Files.write(new File(path).toPath(), encrypter.encrypt(bytes));
+        try {
+            Files.write(new File(path).toPath(), encrypter.encrypt(bytes));
+        } catch (IOException e) {
+            throw new FDataBaseSaveException(e);
+        }
     }
 
     public int estimateSize() {

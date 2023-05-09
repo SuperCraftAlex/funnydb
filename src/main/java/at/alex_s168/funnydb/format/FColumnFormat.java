@@ -47,7 +47,7 @@ public record FColumnFormat(String name, int type, FTableFormat tableFormat, int
      */
     public FTableFormat store() throws FFormatStreamAccesException {
         if(tableFormat == null) {
-            throw new FFormatStreamAccesException();
+            throw new FFormatStreamAccesException("FFormatRequirementStream");
         }
         tableFormat.add(this);
         return tableFormat;
@@ -58,7 +58,7 @@ public record FColumnFormat(String name, int type, FTableFormat tableFormat, int
      */
     public FFormatRequiermentStream next() throws FFormatStreamAccesException {
         if(requiermentStream == null) {
-            throw new FFormatStreamAccesException();
+            throw new FFormatStreamAccesException("FTableFormat");
         }
         requiermentStream.add(this);
         return requiermentStream;
