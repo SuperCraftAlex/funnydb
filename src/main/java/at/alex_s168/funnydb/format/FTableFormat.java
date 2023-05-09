@@ -1,7 +1,6 @@
 package at.alex_s168.funnydb.format;
 
 import at.alex_s168.buffer.SimpleBuffer;
-import at.alex_s168.funnydb.FColumnFormat;
 import at.alex_s168.funnydb.FDataTable;
 
 import java.util.ArrayList;

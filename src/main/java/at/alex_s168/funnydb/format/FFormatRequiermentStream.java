@@ -1,8 +1,6 @@
 package at.alex_s168.funnydb.format;
 
-import at.alex_s168.funnydb.FColumnFormat;
 import at.alex_s168.funnydb.exception.FFormatException;
-import at.alex_s168.funnydb.exception.FFormatStreamTableException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +8,11 @@ import java.util.List;
 public class FFormatRequiermentStream {
 
     private final List<FColumnFormat> columns;
+
+    public FTableFormat getTableFormat() {
+        return fTableFormat;
+    }
+
     private final FTableFormat fTableFormat;
 
     public FFormatRequiermentStream(FTableFormat fTableFormat) {
@@ -42,13 +45,7 @@ public class FFormatRequiermentStream {
         if(!check()) {
             FTableFormat f = fTableFormat.table().format().reset();
             f.reset();
-            columns.forEach((e)->{
-                try {
-                    f.column(e.name(), e.type()).store();
-                } catch (FFormatStreamTableException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
+            columns.forEach(f::add);
         }
     }
 
@@ -62,19 +59,22 @@ public class FFormatRequiermentStream {
     }
 
     /**
-     * Adds a column to the format requirement
+     * opens a column for the format requirement
      */
-    public FFormatRequiermentStream column(String name, Format format) {
-        this.columns.add(new FColumnFormat(name, format, columns.size()));
-        return this;
+    public FColumnFormat column(String name, Format format) {
+        return new FColumnFormat(name, format, columns.size(), this);
     }
 
     /**
-     * Adds a column to the format requirement
+     * opens a column for the format requirement
      */
-    public FFormatRequiermentStream column(String name, int format) {
-        this.columns.add(new FColumnFormat(name, format, columns.size()));
-        return this;
+    public FColumnFormat column(String name, int format) {
+        return new FColumnFormat(name, format, columns.size(), this);
     }
+
+    public void add(FColumnFormat f) {
+        this.columns.add(f);
+    }
+
 }
 
