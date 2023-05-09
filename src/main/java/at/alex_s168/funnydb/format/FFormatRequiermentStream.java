@@ -2,6 +2,7 @@ package at.alex_s168.funnydb.format;
 
 import at.alex_s168.funnydb.FColumnFormat;
 import at.alex_s168.funnydb.exception.FFormatException;
+import at.alex_s168.funnydb.exception.FFormatStreamTableException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +41,13 @@ public class FFormatRequiermentStream {
     public void enforce() {
         if(!check()) {
             FTableFormat f = fTableFormat.table().format().reset();
+            f.reset();
             columns.forEach((e)->{
-                f.c(e.name(), e.type());
+                try {
+                    f.column(e.name(), e.type()).store();
+                } catch (FFormatStreamTableException ex) {
+                    throw new RuntimeException(ex);
+                }
             });
         }
     }
@@ -58,18 +64,17 @@ public class FFormatRequiermentStream {
     /**
      * Adds a column to the format requirement
      */
-    public FFormatRequiermentStream c(String name, Format format) {
-        this.columns.add(new FColumnFormat(name, format, this.columns.size()));
+    public FFormatRequiermentStream column(String name, Format format) {
+        this.columns.add(new FColumnFormat(name, format, columns.size()));
         return this;
     }
 
     /**
      * Adds a column to the format requirement
      */
-    public FFormatRequiermentStream c(String name, int format) {
-        this.columns.add(new FColumnFormat(name, format, this.columns.size()));
+    public FFormatRequiermentStream column(String name, int format) {
+        this.columns.add(new FColumnFormat(name, format, columns.size()));
         return this;
     }
-
 }
 

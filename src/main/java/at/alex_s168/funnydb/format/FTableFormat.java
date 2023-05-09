@@ -23,7 +23,7 @@ public class FTableFormat {
         columns = new ArrayList<>();
         int a = buf.readVarInt();
         for (int i = 0; i < a; i++) {
-            columns.add(new FColumnFormat(buf, i));
+            columns.add(new FColumnFormat(buf, this));
         }
     }
 
@@ -34,6 +34,10 @@ public class FTableFormat {
     public void save(SimpleBuffer buf) {
         buf.writeVarInt(columns.size());
         columns.forEach((c)->c.save(buf));
+    }
+
+    public List<FColumnFormat> get() {
+        return columns;
     }
 
     public FColumnFormat get(int i) {
@@ -63,17 +67,19 @@ public class FTableFormat {
     /**
      * Adds a column to the format
      */
-    public FTableFormat c(String name, Format format) {
-        this.columns.add(new FColumnFormat(name, format, this.columns.size()));
-        return this;
+    public FColumnFormat column(String name, Format format) {
+        return new FColumnFormat(name, format, this);
     }
 
     /**
      * Adds a column to the format
      */
-    public FTableFormat c(String name, int format) {
-        this.columns.add(new FColumnFormat(name, format, this.columns.size()));
-        return this;
+    public FColumnFormat column(String name, int format) {
+        return new FColumnFormat(name, format, this);
+    }
+
+    public void add(FColumnFormat f) {
+        this.columns.add(f);
     }
 
     public int length() {
