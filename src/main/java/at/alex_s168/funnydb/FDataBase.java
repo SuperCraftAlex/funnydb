@@ -140,6 +140,6 @@ public class FDataBase {
         return new Info(tables.size(), version);
     }
 
-    record Info(int tables, int version) {}
+    public record Info(int tables, int version) {}
 
 }

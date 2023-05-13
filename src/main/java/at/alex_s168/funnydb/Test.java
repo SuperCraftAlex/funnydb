@@ -24,7 +24,7 @@ public class Test {
                 .column("created", Format.LONG).next()
                 .enforce();
 
-        users.append().set("alex_s168", "AAAFFBB", 544482269331L);
+        users.append().setAll("alex_s168", "AAAFFBB", 544482269331L);
 
         System.out.println(users.search().r("username","alex_s168").find().first().row().get("password").get());
 

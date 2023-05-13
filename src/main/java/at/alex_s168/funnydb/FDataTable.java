@@ -117,6 +117,6 @@ public class FDataTable {
         return new Info(rows.size(), name);
     }
 
-    record Info(int rows, String name) {}
+    public record Info(int rows, String name) {}
 
 }
