@@ -24,7 +24,7 @@ public class FDataBase {
     private List<FDataTable> tables;
     private int version;
     private EncryptionHandler encrypter;
-    private String[] errors = new String[]{};
+    private String[] errors = new String[]{""};
 
     public FDataBase(String path) {
         this.path = path;
@@ -65,7 +65,7 @@ public class FDataBase {
     }
 
     public void resetErrors() {
-        this.errors = new String[]{};
+        this.errors = new String[]{""};
     }
 
     /**
