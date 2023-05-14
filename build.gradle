@@ -1,6 +1,15 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
+
+publishing {
+	repositories {
+	}
+	publications {
+	}
+}
+
 
 compileJava.options.encoding = 'UTF-8'
 
@@ -32,16 +41,4 @@ dependencies {
     runtime 'commons-lang:commons-lang:2.6'
     implementation 'io.netty:netty-all:4.1.63.Final'
     implementation 'com.github.SuperCraftAlex:NettySimpleBuffer:56e6c1e68f'
-}
-
-
-plugins {
-	id 'maven-publish'
-}
-
-publishing {
-	repositories {
-	}
-	publications {
-	}
 }
