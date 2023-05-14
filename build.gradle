@@ -17,17 +17,6 @@ targetCompatibility = JavaVersion.VERSION_17
 group 'at.alex_s168'
 version '1.0'
 
-plugins {
-	id 'maven-publish'
-}
-
-publishing {
-	repositories {
-	}
-	publications {
-	}
-}
-
 repositories {
     mavenCentral()
     jcenter()
@@ -43,4 +32,16 @@ dependencies {
     runtime 'commons-lang:commons-lang:2.6'
     implementation 'io.netty:netty-all:4.1.63.Final'
     implementation 'com.github.SuperCraftAlex:NettySimpleBuffer:56e6c1e68f'
+}
+
+
+plugins {
+	id 'maven-publish'
+}
+
+publishing {
+	repositories {
+	}
+	publications {
+	}
 }
