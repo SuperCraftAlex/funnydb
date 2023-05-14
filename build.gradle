@@ -17,6 +17,17 @@ targetCompatibility = JavaVersion.VERSION_17
 group 'at.alex_s168'
 version '1.0'
 
+plugins {
+	id 'maven-publish'
+}
+
+publishing {
+	repositories {
+	}
+	publications {
+	}
+}
+
 repositories {
     mavenCentral()
     jcenter()
