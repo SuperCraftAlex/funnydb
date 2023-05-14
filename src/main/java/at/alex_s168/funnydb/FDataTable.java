@@ -12,6 +12,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class FDataTable {
 
     private List<FDataRow> rows;
+
+    public FDataBase getDb() {
+        return db;
+    }
+
     private final FDataBase db;
     private final String name;
     private final FTableFormat format;

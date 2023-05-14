@@ -35,7 +35,12 @@ public class FSearchStream {
         req.add(new FSearchRequirement() {
             @Override
             public boolean appliesElement(FDataElement r) {
-                return r.get().equals(value);
+                Object v = r.get();
+                if(v == null) {
+                    table.getDb().error(table, "row: "+r.row() + " index: " + r.getCategoryName() + "/" + r.getEID() + " value: "+r.get() + " || value == null!");
+                    return false;
+                }
+                return v.equals(value);
             }
 
             @Override
@@ -58,7 +63,12 @@ public class FSearchStream {
         req.add(new FSearchRequirement() {
             @Override
             public boolean appliesElement(FDataElement r) {
-                return r.get().equals(value);
+                Object v = r.get();
+                if(v == null) {
+                    table.getDb().error(table, "row: "+r.row() + " index: " + r.getCategoryName() + "/" + r.getEID() + " value: "+r.get() + " || value == null!");
+                    return false;
+                }
+                return v.equals(value);
             }
 
             @Override

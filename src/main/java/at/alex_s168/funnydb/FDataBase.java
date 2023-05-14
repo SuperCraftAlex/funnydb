@@ -24,6 +24,7 @@ public class FDataBase {
     private List<FDataTable> tables;
     private int version;
     private EncryptionHandler encrypter;
+    private String[] errors = new String[]{};
 
     public FDataBase(String path) {
         this.path = path;
@@ -42,6 +43,29 @@ public class FDataBase {
     public FDataBase setHandler(EncryptionHandler handler) {
         this.encrypter = handler;
         return this;
+    }
+
+    /**
+     * Adds a error to the error list (only use for small problems and warnings)
+     */
+    public void error(FDataTable table, String message) {
+        errors[errors.length-1] = "In: "+table+" "+message;
+    }
+
+    /**
+     * Returns a formatted error list with the last x elements
+     */
+    public String errorList(int amount) {
+        amount = Math.min(amount, errors.length);
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < amount; i++) {
+            b.append(errors[errors.length - amount + i]).append("\n");
+        }
+        return b.toString();
+    }
+
+    public void resetErrors() {
+        this.errors = new String[]{};
     }
 
     /**
